@@ -131,7 +131,7 @@ function Check-Status {
 
     # Check unified API/Frontend server
     if (Test-Port -Port $ApiPort) {
-        Write-Host "✓ API & Frontend Server: RUNNING on port $ApiPort" -ForegroundColor Green
+        Write-Host "✓ API `& Frontend Server: RUNNING on port $ApiPort" -ForegroundColor Green
         $processId = Get-ProcessId -Port $ApiPort
         if ($processId) {
             Write-Host "  Process ID: $processId, Started: $(Get-Date -Format 'MM/dd/yyyy HH:mm:ss')" -ForegroundColor Gray
@@ -139,7 +139,7 @@ function Check-Status {
         Write-Host "  Frontend URL: http://localhost:$ApiPort/frontend/task_page_example.html" -ForegroundColor Cyan
         Write-Host "  API Docs: http://localhost:$ApiPort/docs" -ForegroundColor Cyan
     } else {
-        Write-Host "✗ API & Frontend Server: STOPPED" -ForegroundColor Red
+        Write-Host "✗ API `& Frontend Server: STOPPED" -ForegroundColor Red
     }
 
     # Show recent log entries
