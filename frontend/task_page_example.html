@@ -27,13 +27,13 @@
     
     <script>
         // Configuration
-        window.API_BASE_URL = 'http://localhost:8080';
+        window.API_BASE_URL = 'http://localhost:8000';
         window.CURRENT_USER = 'mk'; // Set from your authentication system
-        window.JWT_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtayIsImlhdCI6MTc2OTA4NzM4MywiZXhwIjoxNzY5MDkwOTgzfQ.HaWJu1CSmFxCE9dGSgqslCf0I-K-piC-HgL93oFmLGA';
+        window.JWT_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtayIsImlhdCI6MTc2OTA4OTc3NCwiZXhwIjoxNzY5MTc2MTc0fQ.2-VsKtBVeETTk1LCdm_s-CJB4-ult07QgvMM_Acg2-k';
         window.AUTO_REFRESH_COMMENTS = false; // Set to true for auto-refresh
         
         // Set task ID (can be from URL parameter or set directly)
-        document.body.setAttribute('data-task-id', new URLSearchParams(window.location.search).get('task_id') || 'task-1');
+        document.body.setAttribute('data-task-id', new URLSearchParams(window.location.search).get('task_id') || 'plan-d299e27a-task-1');
     </script>
     <script src="task_page.js"></script>
     
