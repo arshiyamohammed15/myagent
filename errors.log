@@ -1103,3 +1103,165 @@ None
 None
 2026-01-22 18:48:11 - ERROR - ERROR: --- Logging error ---
 None
+2026-01-22 19:12:12 - ERROR - ERROR: 401: Invalid token | Context: path=/tasks/task-1, method=GET, client=127.0.0.1, error_type=HTTPException
+(<class 'fastapi.exceptions.HTTPException'>, HTTPException(status_code=401, detail='Invalid token'), <traceback object at 0x000001E7AAD28280>)
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\api\authentication.py", line 41, in verify_token
+    return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\jwt\api_jwt.py", line 210, in decode
+    decoded = self.decode_complete(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\jwt\api_jwt.py", line 151, in decode_complete
+    decoded = api_jws.decode_complete(
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\jwt\api_jws.py", line 209, in decode_complete
+    self._verify_signature(signing_input, header, signature, key, algorithms)
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\jwt\api_jws.py", line 310, in _verify_signature
+    raise InvalidSignatureError("Signature verification failed")
+jwt.exceptions.InvalidSignatureError: Signature verification failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\starlette\middleware\cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\starlette\middleware\cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\starlette\middleware\base.py", line 191, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+  File "C:\Users\ASUS\AppData\Local\Programs\Python\Python311\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\starlette\_utils.py", line 85, in collapse_excgroups
+    raise exc
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\api\authentication.py", line 102, in auth_middleware
+    verify_token(token)
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\api\authentication.py", line 47, in verify_token
+    raise HTTPException(
+fastapi.exceptions.HTTPException: 401: Invalid token
+2026-01-22 19:15:56 - ERROR - ERROR: 401: Invalid token | Context: path=/tasks/task-1, method=GET, client=127.0.0.1, error_type=HTTPException
+(<class 'fastapi.exceptions.HTTPException'>, HTTPException(status_code=401, detail='Invalid token'), <traceback object at 0x000001E7AAC5D680>)
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\api\authentication.py", line 41, in verify_token
+    return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\jwt\api_jwt.py", line 210, in decode
+    decoded = self.decode_complete(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\jwt\api_jwt.py", line 151, in decode_complete
+    decoded = api_jws.decode_complete(
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\jwt\api_jws.py", line 209, in decode_complete
+    self._verify_signature(signing_input, header, signature, key, algorithms)
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\jwt\api_jws.py", line 310, in _verify_signature
+    raise InvalidSignatureError("Signature verification failed")
+jwt.exceptions.InvalidSignatureError: Signature verification failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\starlette\middleware\cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\starlette\middleware\cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\starlette\middleware\base.py", line 191, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+  File "C:\Users\ASUS\AppData\Local\Programs\Python\Python311\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\starlette\_utils.py", line 85, in collapse_excgroups
+    raise exc
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\api\authentication.py", line 102, in auth_middleware
+    verify_token(token)
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\api\authentication.py", line 47, in verify_token
+    raise HTTPException(
+fastapi.exceptions.HTTPException: 401: Invalid token
+2026-01-22 19:16:07 - ERROR - ERROR: 401: Invalid token | Context: path=/tasks/task-1, method=GET, client=127.0.0.1, error_type=HTTPException
+(<class 'fastapi.exceptions.HTTPException'>, HTTPException(status_code=401, detail='Invalid token'), <traceback object at 0x000001E7AAD54800>)
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\api\authentication.py", line 41, in verify_token
+    return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\jwt\api_jwt.py", line 210, in decode
+    decoded = self.decode_complete(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\jwt\api_jwt.py", line 151, in decode_complete
+    decoded = api_jws.decode_complete(
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\jwt\api_jws.py", line 209, in decode_complete
+    self._verify_signature(signing_input, header, signature, key, algorithms)
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\jwt\api_jws.py", line 310, in _verify_signature
+    raise InvalidSignatureError("Signature verification failed")
+jwt.exceptions.InvalidSignatureError: Signature verification failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\starlette\middleware\cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\starlette\middleware\cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\starlette\middleware\base.py", line 191, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+  File "C:\Users\ASUS\AppData\Local\Programs\Python\Python311\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\starlette\_utils.py", line 85, in collapse_excgroups
+    raise exc
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\api\authentication.py", line 102, in auth_middleware
+    verify_token(token)
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\api\authentication.py", line 47, in verify_token
+    raise HTTPException(
+fastapi.exceptions.HTTPException: 401: Invalid token
+2026-01-22 19:18:33 - ERROR - ERROR: 401: Invalid token | Context: path=/tasks/plan-d299e27a-task-1, method=GET, client=127.0.0.1, error_type=HTTPException
+(<class 'fastapi.exceptions.HTTPException'>, HTTPException(status_code=401, detail='Invalid token'), <traceback object at 0x000001E7AAD55380>)
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\api\authentication.py", line 41, in verify_token
+    return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\jwt\api_jwt.py", line 210, in decode
+    decoded = self.decode_complete(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\jwt\api_jwt.py", line 151, in decode_complete
+    decoded = api_jws.decode_complete(
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\jwt\api_jws.py", line 209, in decode_complete
+    self._verify_signature(signing_input, header, signature, key, algorithms)
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\jwt\api_jws.py", line 310, in _verify_signature
+    raise InvalidSignatureError("Signature verification failed")
+jwt.exceptions.InvalidSignatureError: Signature verification failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\starlette\middleware\cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\starlette\middleware\base.py", line 191, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+  File "C:\Users\ASUS\AppData\Local\Programs\Python\Python311\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\starlette\_utils.py", line 85, in collapse_excgroups
+    raise exc
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\venv\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\api\authentication.py", line 102, in auth_middleware
+    verify_token(token)
+  File "C:\Users\ASUS\Desktop\agents\Planner_1\api\authentication.py", line 47, in verify_token
+    raise HTTPException(
+fastapi.exceptions.HTTPException: 401: Invalid token
