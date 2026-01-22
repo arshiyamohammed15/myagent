@@ -35,3 +35,9 @@ htmlcov/
 .DS_Store
 Thumbs.db
 
+# Prometheus binaries and data
+prometheus/
+prometheus.exe
+promtool.exe
+*.exe
+
