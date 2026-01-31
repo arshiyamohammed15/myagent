@@ -3,12 +3,6 @@ pipeline {
     agent any  // Runs the pipeline on any available agent
 
     stages {
-        stage('Checkout Code') {
-            steps {
-                // Checkout the code from GitHub (or your version control system)
-                git 'https://github.com/your-repo/your-project.git'
-            }
-        }
         stage('Install Dependencies') {
             steps {
                 script {
