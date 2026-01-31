@@ -1372,28 +1372,119 @@ CONSTRAINT F: Do not repeat input in the output.
 CONSTRAINT G: Only perform the stated task and nothing else.
 CONSTRAINT H: Do not scan the repo and send as context. Until and unless specified explicitly
 
+find the root cause of the error and fix the issue without changing the functionality 
 
 ---
 
 _**Agent (model gemini-3-flash, mode Agent)**_
 
-The root cause is PEP 668, which prevents `pip` from installing packages into the system-wide Python environment on modern Linux distributions (like Debian/Ubuntu) to avoid breaking system tools.
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
 
-To fix this within your Jenkins pipeline, use a virtual environment:
+<details><summary>Tool use: **edit_file_v2** • Edit file: c:\Users\ASUS\Desktop\agents\Planner_1\Jenkinsfile</summary>
 
-```groovy
-stage('Install Dependencies') {
-    steps {
-        script {
-            sh '''
-                python3 -m venv venv
-                . venv/bin/activate
-                pip install -r requirements.txt
-            '''
+</details>
+
+</tool-use>
+
+---
+
+```6:13:Jenkinsfile
+        stage('Install Dependencies') {
+            steps {
+                script {
+                    // Use --break-system-packages to override PEP 668 in the managed environment
+                    sh 'python3 -m pip install --break-system-packages -r requirements.txt'
+                }
+            }
         }
-    }
-}
 ```
+
+---
+
+_**User**_
+
++ python3 -m pip install --break-system-packages -r requirements.txt
+Defaulting to user installation because normal site-packages is not writeable
+Collecting fastapi==0.128.0 (from -r requirements.txt (line 1))
+  Downloading fastapi-0.128.0-py3-none-any.whl.metadata (30 kB)
+Collecting uvicorn==0.32.0 (from uvicorn[standard]==0.32.0->-r requirements.txt (line 2))
+  Downloading uvicorn-0.32.0-py3-none-any.whl.metadata (6.6 kB)
+Collecting PyJWT==2.8.0 (from -r requirements.txt (line 3))
+  Downloading PyJWT-2.8.0-py3-none-any.whl.metadata (4.2 kB)
+Collecting pydantic==2.12.3 (from -r requirements.txt (line 4))
+  Downloading pydantic-2.12.3-py3-none-any.whl.metadata (87 kB)
+Collecting SQLAlchemy==2.0.23 (from -r requirements.txt (line 5))
+  Downloading SQLAlchemy-2.0.23-py3-none-any.whl.metadata (9.6 kB)
+Collecting psycopg2-binary==2.9.9 (from -r requirements.txt (line 6))
+  Downloading psycopg2-binary-2.9.9.tar.gz (384 kB)
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'error'
+  error: subprocess-exited-with-error
+  
+  × Getting requirements to build wheel did not run successfully.
+  │ exit code: 1
+  ╰─> [34 lines of output]
+      /tmp/pip-build-env-__k4bl_4/overlay/local/lib/python3.13/dist-packages/setuptools/dist.py:765: SetuptoolsDeprecationWarning: License classifiers are deprecated.
+      !!
+      
+              ********************************************************************************
+              Please consider removing the following classifiers in favor of a SPDX license expression:
+      
+              License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)
+      
+              See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
+              ********************************************************************************
+      
+      !!
+        self._finalize_license_expression()
+      running egg_info
+      writing psycopg2_binary.egg-info/PKG-INFO
+      writing dependency_links to psycopg2_binary.egg-info/dependency_links.txt
+      writing top-level names to psycopg2_binary.egg-info/top_level.txt
+      
+      Error: pg_config executable not found.
+      
+      pg_config is required to build psycopg2 from source.  Please add the directory
+      containing pg_config to the $PATH or specify the full executable path with the
+      option:
+      
+          python setup.py build_ext --pg-config /path/to/pg_config build ...
+      
+      or with the pg_config option in 'setup.cfg'.
+      
+      If you prefer to avoid building psycopg2 from source, please install the PyPI
+      'psycopg2-binary' package instead.
+      
+      For further information please check the 'doc/src/install.rst' file (also at
+      <https://www.psycopg.org/docs/install.html>).
+      
+      [end of output]
+  
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+error: subprocess-exited-with-error
+× Getting requirements to build wheel did not run successfully.
+│ exit code: 1
+╰─> See above for output.
+note: This error originates from a subprocess, and is likely not a problem with pip.
+script returned exit code 1
+what is happening in the above issues ..find the root cause of the issues and fix the error
+strictly follow the constrains :
+CONSTRAINT A: Only include code/text explicitly provided below.
+CONSTRAINT B: Ignore all prior conversation history.
+CONSTRAINT C: Use static instructions followed by dynamic content; avoid variable metadata before the task text.
+CONSTRAINT E: Limit output strictly to the requested answer; no explanations, no extra text.
+CONSTRAINT F: Do not repeat input in the output.
+CONSTRAINT G: Only perform the stated task and nothing else.
+CONSTRAINT H: Do not scan the repo and send as context. Until and unless specified explicitly
+
+
+---
+
+_**Agent (model gemini-3-flash, mode Agent)**_
+
+The root cause of the error is that `pip` is attempting to build `psycopg
 
 ---
 
