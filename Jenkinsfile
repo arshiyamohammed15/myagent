@@ -6,8 +6,8 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 script {
-                    // Install dependencies (change this according to your project)
-                    sh 'python3 -m pip install -r requirements.txt'  // Example for Python projects
+                    // Use python3 -m pip to ensure pip is found via the python3 executable
+                    sh 'python3 -m pip install -r requirements.txt'
                 }
             }
         }
