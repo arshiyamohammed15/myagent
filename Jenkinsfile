@@ -1,17 +1,13 @@
 // Jenkinsfile
 pipeline {
-    agent {
-        docker {
-            image 'python:3.9'
-        }
-    }
+    agent any
 
     stages {
         stage('Install Dependencies') {
             steps {
                 script {
                     // Install dependencies (change this according to your project)
-                    sh 'pip install -r requirements.txt'  // Example for Python projects
+                    sh 'python3 -m pip install -r requirements.txt'  // Example for Python projects
                 }
             }
         }
