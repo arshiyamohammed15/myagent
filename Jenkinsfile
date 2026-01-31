@@ -6,8 +6,8 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 script {
-                    // Use python3 -m pip to ensure pip is found via the python3 executable
-                    sh 'python3 -m pip install -r requirements.txt'
+                    // Use --break-system-packages to override PEP 668 in the managed environment
+                    sh 'python3 -m pip install --break-system-packages -r requirements.txt'
                 }
             }
         }

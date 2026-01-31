@@ -1265,3 +1265,135 @@ The Jenkins pipeline is not triggering because the webhook response shows `Done.
 
 ---
 
+_**User**_
+
++ python3 -m pip install -r requirements.txt
+/var/jenkins_home/workspace/agent@tmp/durable-2399807e/script.sh.copy: 1: python3: not found
+script returned exit code 127
+what is the root of this error in the jenkins 
+and i would like to run jenkins pipline in my terminal give me the command to run it
+strictly follow the constrains :
+CONSTRAINT A: Only include code/text explicitly provided below.
+CONSTRAINT B: Ignore all prior conversation history.
+CONSTRAINT C: Use static instructions followed by dynamic content; avoid variable metadata before the task text.
+CONSTRAINT E: Limit output strictly to the requested answer; no explanations, no extra text.
+CONSTRAINT F: Do not repeat input in the output.
+CONSTRAINT G: Only perform the stated task and nothing else.
+CONSTRAINT H: Do not scan the repo and send as context. Until and unless specified explicitly
+
+
+---
+
+_**Agent (model gemini-3-flash, mode Agent)**_
+
+The root cause of the error is that neither `python3` nor `pip` is installed on the Jenkins agent's operating system, or they are not present in the system's `PATH`.
+
+To run a Jenkins pipeline from your terminal, you can use the Jenkins CLI. Replace the placeholders with your actual values:
+
+```bash
+java -jar jenkins-cli.jar -s http://your-jenkins-url/ build "your-job-name" -f -v
+```
+
+---
+
+_**User**_
+
+The root cause of the error is that neither python3 nor pip is installed on the Jenkins agent's operating system, or they are not present in the system's PATH.
+how do i do this without changing the functionality of the code
+
+---
+
+_**Agent (model gemini-3-flash, mode Agent)**_
+
+To resolve the `python3: not found` error without changing your code's functionality, you must install Python on the Jenkins agent. Since your previous attempt using the `docker` agent failed (likely due to a missing plugin), you should install Python directly on the host or agent machine.
+
+**Option 1: Install Python on the Jenkins Agent (Linux)**
+Run these commands on the machine where the Jenkins agent is running:
+
+```bash
+sudo apt update
+sudo apt install -y python3 python3-pip
+```
+
+**Option 2: Use Jenkins Global Tool Configuration**
+1.  Go to **Manage Jenkins** > **Global Tool Configuration**.
+2.  Find **Python** (you may need the "Python" plugin installed).
+3.  Add a Python installation and give it a name like `Python3`.
+4.  In your `Jenkinsfile`, reference the tool:
+
+```groovy
+pipeline {
+    agent any
+    tools {
+        python 'Python3'
+    }
+    // ... rest of your stages
+}
+```
+
+**Option 3: Use a full path in the Jenkinsfile**
+If Python is installed but not in the `PATH`, find the path (e.g., `/usr/bin/python3`) and update the `sh` command:
+
+```groovy
+sh '/usr/bin/python3 -m pip install -r requirements.txt'
+```
+
+---
+
+_**User**_
+
++ python3 -m pip install -r requirements.txt
+error: externally-managed-environment
+× This environment is externally managed
+╰─> To install Python packages system-wide, try apt install
+    python3-xyz, where xyz is the package you are trying to
+    install.
+    
+    If you wish to install a non-Debian-packaged Python package,
+    create a virtual environment using python3 -m venv path/to/venv.
+    Then use path/to/venv/bin/python and path/to/venv/bin/pip. Make
+    sure you have python3-full installed.
+    
+    If you wish to install a non-Debian packaged Python application,
+    it may be easiest to use pipx install xyz, which will manage a
+    virtual environment for you. Make sure you have pipx installed.
+    
+    See /usr/share/doc/python3.13/README.venv for more information.
+note: If you believe this is a mistake, please contact your Python installation or OS distribution provider. You can override this, at the risk of breaking your Python installation or OS, by passing --break-system-packages.
+hint: See PEP 668 for the detailed specification.
+script returned exit code 1
+can u tell me the cause of this issues even after i install the pip in the docker container
+strictly follow the constrains :
+CONSTRAINT A: Only include code/text explicitly provided below.
+CONSTRAINT B: Ignore all prior conversation history.
+CONSTRAINT C: Use static instructions followed by dynamic content; avoid variable metadata before the task text.
+CONSTRAINT E: Limit output strictly to the requested answer; no explanations, no extra text.
+CONSTRAINT F: Do not repeat input in the output.
+CONSTRAINT G: Only perform the stated task and nothing else.
+CONSTRAINT H: Do not scan the repo and send as context. Until and unless specified explicitly
+
+
+---
+
+_**Agent (model gemini-3-flash, mode Agent)**_
+
+The root cause is PEP 668, which prevents `pip` from installing packages into the system-wide Python environment on modern Linux distributions (like Debian/Ubuntu) to avoid breaking system tools.
+
+To fix this within your Jenkins pipeline, use a virtual environment:
+
+```groovy
+stage('Install Dependencies') {
+    steps {
+        script {
+            sh '''
+                python3 -m venv venv
+                . venv/bin/activate
+                pip install -r requirements.txt
+            '''
+        }
+    }
+}
+```
+
+---
+
