@@ -1484,7 +1484,364 @@ CONSTRAINT H: Do not scan the repo and send as context. Until and unless specifi
 
 _**Agent (model gemini-3-flash, mode Agent)**_
 
-The root cause of the error is that `pip` is attempting to build `psycopg
+The root cause of the error is that `pip` is attempting to build `psycopg2-binary` from source because a pre-compiled wheel is not available for your specific environment (Python 3.13 on this architecture). Building from source requires the PostgreSQL development headers and the `pg_config` executable, which are missing from the Jenkins agent.
+
+To fix this without changing functionality, install the PostgreSQL client development package on the Jenkins agent:
+
+```bash
+sudo apt update
+sudo apt install -y libpq-dev
+```
+
+Alternatively, if you cannot modify the agent, update your `requirements.txt` to use `psycopg2-binary` versions that provide pre-compiled wheels for newer Python versions, or use the `psycopg` (version 3) library which is the modern successor.
+
+---
+
+_**User**_
+
++ python3 -m pip install --break-system-packages -r requirements.txt
+Defaulting to user installation because normal site-packages is not writeable
+Collecting fastapi==0.128.0 (from -r requirements.txt (line 1))
+  Using cached fastapi-0.128.0-py3-none-any.whl.metadata (30 kB)
+Collecting uvicorn==0.32.0 (from uvicorn[standard]==0.32.0->-r requirements.txt (line 2))
+  Using cached uvicorn-0.32.0-py3-none-any.whl.metadata (6.6 kB)
+Collecting PyJWT==2.8.0 (from -r requirements.txt (line 3))
+  Using cached PyJWT-2.8.0-py3-none-any.whl.metadata (4.2 kB)
+Collecting pydantic==2.12.3 (from -r requirements.txt (line 4))
+  Using cached pydantic-2.12.3-py3-none-any.whl.metadata (87 kB)
+Collecting SQLAlchemy==2.0.23 (from -r requirements.txt (line 5))
+  Using cached SQLAlchemy-2.0.23-py3-none-any.whl.metadata (9.6 kB)
+Collecting psycopg2-binary==2.9.9 (from -r requirements.txt (line 6))
+  Using cached psycopg2-binary-2.9.9.tar.gz (384 kB)
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Collecting alembic==1.13.2 (from -r requirements.txt (line 7))
+  Downloading alembic-1.13.2-py3-none-any.whl.metadata (7.4 kB)
+Collecting pytest==8.4.2 (from -r requirements.txt (line 8))
+  Downloading pytest-8.4.2-py3-none-any.whl.metadata (7.7 kB)
+Collecting pytest-cov==5.0.0 (from -r requirements.txt (line 9))
+  Downloading pytest_cov-5.0.0-py3-none-any.whl.metadata (27 kB)
+Collecting coverage==7.5.0 (from -r requirements.txt (line 10))
+  Downloading coverage-7.5.0.tar.gz (798 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 798.3/798.3 kB 10.1 MB/s eta 0:00:00
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Collecting prometheus-client==0.20.0 (from -r requirements.txt (line 11))
+  Downloading prometheus_client-0.20.0-py3-none-any.whl.metadata (1.8 kB)
+Collecting pyyaml==6.0.3 (from -r requirements.txt (line 12))
+  Downloading pyyaml-6.0.3-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+Collecting openpyxl==3.1.2 (from -r requirements.txt (line 13))
+  Downloading openpyxl-3.1.2-py2.py3-none-any.whl.metadata (2.5 kB)
+Collecting starlette<0.51.0,>=0.40.0 (from fastapi==0.128.0->-r requirements.txt (line 1))
+  Downloading starlette-0.50.0-py3-none-any.whl.metadata (6.3 kB)
+Collecting typing-extensions>=4.8.0 (from fastapi==0.128.0->-r requirements.txt (line 1))
+  Downloading typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting annotated-doc>=0.0.2 (from fastapi==0.128.0->-r requirements.txt (line 1))
+  Downloading annotated_doc-0.0.4-py3-none-any.whl.metadata (6.6 kB)
+Collecting click>=7.0 (from uvicorn==0.32.0->uvicorn[standard]==0.32.0->-r requirements.txt (line 2))
+  Downloading click-8.3.1-py3-none-any.whl.metadata (2.6 kB)
+Collecting h11>=0.8 (from uvicorn==0.32.0->uvicorn[standard]==0.32.0->-r requirements.txt (line 2))
+  Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+Collecting annotated-types>=0.6.0 (from pydantic==2.12.3->-r requirements.txt (line 4))
+  Downloading annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB)
+Collecting pydantic-core==2.41.4 (from pydantic==2.12.3->-r requirements.txt (line 4))
+  Downloading pydantic_core-2.41.4-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (7.3 kB)
+Collecting typing-inspection>=0.4.2 (from pydantic==2.12.3->-r requirements.txt (line 4))
+  Downloading typing_inspection-0.4.2-py3-none-any.whl.metadata (2.6 kB)
+Collecting greenlet!=0.4.17 (from SQLAlchemy==2.0.23->-r requirements.txt (line 5))
+  Downloading greenlet-3.3.1-cp313-cp313-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (3.7 kB)
+Collecting Mako (from alembic==1.13.2->-r requirements.txt (line 7))
+  Downloading mako-1.3.10-py3-none-any.whl.metadata (2.9 kB)
+Collecting iniconfig>=1 (from pytest==8.4.2->-r requirements.txt (line 8))
+  Downloading iniconfig-2.3.0-py3-none-any.whl.metadata (2.5 kB)
+Requirement already satisfied: packaging>=20 in /usr/lib/python3/dist-packages (from pytest==8.4.2->-r requirements.txt (line 8)) (25.0)
+Collecting pluggy<2,>=1.5 (from pytest==8.4.2->-r requirements.txt (line 8))
+  Downloading pluggy-1.6.0-py3-none-any.whl.metadata (4.8 kB)
+Collecting pygments>=2.7.2 (from pytest==8.4.2->-r requirements.txt (line 8))
+  Downloading pygments-2.19.2-py3-none-any.whl.metadata (2.5 kB)
+Collecting et-xmlfile (from openpyxl==3.1.2->-r requirements.txt (line 13))
+  Downloading et_xmlfile-2.0.0-py3-none-any.whl.metadata (2.7 kB)
+Collecting httptools>=0.5.0 (from uvicorn[standard]==0.32.0->-r requirements.txt (line 2))
+  Downloading httptools-0.7.1-cp313-cp313-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (3.5 kB)
+Collecting python-dotenv>=0.13 (from uvicorn[standard]==0.32.0->-r requirements.txt (line 2))
+  Downloading python_dotenv-1.2.1-py3-none-any.whl.metadata (25 kB)
+Collecting uvloop!=0.15.0,!=0.15.1,>=0.14.0 (from uvicorn[standard]==0.32.0->-r requirements.txt (line 2))
+  Downloading uvloop-0.22.1-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (4.9 kB)
+Collecting watchfiles>=0.13 (from uvicorn[standard]==0.32.0->-r requirements.txt (line 2))
+  Downloading watchfiles-1.1.1-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+Collecting websockets>=10.4 (from uvicorn[standard]==0.32.0->-r requirements.txt (line 2))
+  Downloading websockets-16.0-cp313-cp313-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (6.8 kB)
+Collecting anyio<5,>=3.6.2 (from starlette<0.51.0,>=0.40.0->fastapi==0.128.0->-r requirements.txt (line 1))
+  Downloading anyio-4.12.1-py3-none-any.whl.metadata (4.3 kB)
+Collecting idna>=2.8 (from anyio<5,>=3.6.2->starlette<0.51.0,>=0.40.0->fastapi==0.128.0->-r requirements.txt (line 1))
+  Downloading idna-3.11-py3-none-any.whl.metadata (8.4 kB)
+Collecting MarkupSafe>=0.9.2 (from Mako->alembic==1.13.2->-r requirements.txt (line 7))
+  Downloading markupsafe-3.0.3-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+Downloading fastapi-0.128.0-py3-none-any.whl (103 kB)
+Downloading uvicorn-0.32.0-py3-none-any.whl (63 kB)
+Downloading PyJWT-2.8.0-py3-none-any.whl (22 kB)
+Downloading pydantic-2.12.3-py3-none-any.whl (462 kB)
+Downloading SQLAlchemy-2.0.23-py3-none-any.whl (1.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.9/1.9 MB 10.7 MB/s eta 0:00:00
+Downloading alembic-1.13.2-py3-none-any.whl (232 kB)
+Downloading pytest-8.4.2-py3-none-any.whl (365 kB)
+Downloading pytest_cov-5.0.0-py3-none-any.whl (21 kB)
+Downloading prometheus_client-0.20.0-py3-none-any.whl (54 kB)
+Downloading pyyaml-6.0.3-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (801 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 801.6/801.6 kB 15.3 MB/s eta 0:00:00
+Downloading openpyxl-3.1.2-py2.py3-none-any.whl (249 kB)
+Downloading pydantic_core-2.41.4-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 14.0 MB/s eta 0:00:00
+Downloading pluggy-1.6.0-py3-none-any.whl (20 kB)
+Downloading starlette-0.50.0-py3-none-any.whl (74 kB)
+Downloading anyio-4.12.1-py3-none-any.whl (113 kB)
+Downloading annotated_doc-0.0.4-py3-none-any.whl (5.3 kB)
+Downloading annotated_types-0.7.0-py3-none-any.whl (13 kB)
+Downloading click-8.3.1-py3-none-any.whl (108 kB)
+Downloading greenlet-3.3.1-cp313-cp313-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (612 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 612.9/612.9 kB 7.0 MB/s eta 0:00:00
+Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+Downloading httptools-0.7.1-cp313-cp313-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (478 kB)
+Downloading idna-3.11-py3-none-any.whl (71 kB)
+Downloading iniconfig-2.3.0-py3-none-any.whl (7.5 kB)
+Downloading pygments-2.19.2-py3-none-any.whl (1.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 10.2 MB/s eta 0:00:00
+Downloading python_dotenv-1.2.1-py3-none-any.whl (21 kB)
+Downloading typing_extensions-4.15.0-py3-none-any.whl (44 kB)
+Downloading typing_inspection-0.4.2-py3-none-any.whl (14 kB)
+Downloading uvloop-0.22.1-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (4.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.4/4.4 MB 12.6 MB/s eta 0:00:00
+Downloading watchfiles-1.1.1-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (456 kB)
+Downloading websockets-16.0-cp313-cp313-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (184 kB)
+Downloading et_xmlfile-2.0.0-py3-none-any.whl (18 kB)
+Downloading mako-1.3.10-py3-none-any.whl (78 kB)
+Downloading markupsafe-3.0.3-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+Building wheels for collected packages: psycopg2-binary, coverage
+  Building wheel for psycopg2-binary (pyproject.toml): started
+  Building wheel for psycopg2-binary (pyproject.toml): finished with status 'error'
+  error: subprocess-exited-with-error
+  
+  × Building wheel for psycopg2-binary (pyproject.toml) did not run successfully.
+  │ exit code: 1
+  ╰─> [143 lines of output]
+      /tmp/pip-build-env-4kp9dygj/overlay/local/lib/python3.13/dist-packages/setuptools/dist.py:765: SetuptoolsDeprecationWarning: License classifiers are deprecated.
+      !!
+      
+              ********************************************************************************
+              Please consider removing the following classifiers in favor of a SPDX license expression:
+      
+              License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)
+      
+              See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
+              ********************************************************************************
+      
+      !!
+        self._finalize_license_expression()
+      running bdist_wheel
+      running build
+      running build_py
+      creating build/lib.linux-x86_64-cpython-313/psycopg2
+      copying lib/_range.py -> build/lib.linux-x86_64-cpython-313/psycopg2
+      copying lib/pool.py -> build/lib.linux-x86_64-cpython-313/psycopg2
+      copying lib/errorcodes.py -> build/lib.linux-x86_64-cpython-313/psycopg2
+      copying lib/_json.py -> build/lib.linux-x86_64-cpython-313/psycopg2
+      copying lib/tz.py -> build/lib.linux-x86_64-cpython-313/psycopg2
+      copying lib/__init__.py -> build/lib.linux-x86_64-cpython-313/psycopg2
+      copying lib/extensions.py -> build/lib.linux-x86_64-cpython-313/psycopg2
+      copying lib/errors.py -> build/lib.linux-x86_64-cpython-313/psycopg2
+      copying lib/_ipaddress.py -> build/lib.linux-x86_64-cpython-313/psycopg2
+      copying lib/extras.py -> build/lib.linux-x86_64-cpython-313/psycopg2
+      copying lib/sql.py -> build/lib.linux-x86_64-cpython-313/psycopg2
+      running build_ext
+      building 'psycopg2._psycopg' extension
+      creating build/temp.linux-x86_64-cpython-313/psycopg
+      x86_64-linux-gnu-gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall -fPIC "-DPSYCOPG_VERSION=2.9.9 (dt dec pq3 ext lo64)" -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=170007 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/usr/include/python3.13 -I. -I/usr/include/postgresql -I/usr/include/postgresql/17/server -I/usr/include/libxml2 -c psycopg/adapter_asis.c -o build/temp.linux-x86_64-cpython-313/psycopg/adapter_asis.o -Wdeclaration-after-statement
+      x86_64-linux-gnu-gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall -fPIC "-DPSYCOPG_VERSION=2.9.9 (dt dec pq3 ext lo64)" -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=170007 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/usr/include/python3.13 -I. -I/usr/include/postgresql -I/usr/include/postgresql/17/server -I/usr/include/libxml2 -c psycopg/adapter_binary.c -o build/temp.linux-x86_64-cpython-313/psycopg/adapter_binary.o -Wdeclaration-after-statement
+      x86_64-linux-gnu-gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall -fPIC "-DPSYCOPG_VERSION=2.9.9 (dt dec pq3 ext lo64)" -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=170007 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/usr/include/python3.13 -I. -I/usr/include/postgresql -I/usr/include/postgresql/17/server -I/usr/include/libxml2 -c psycopg/adapter_datetime.c -o build/temp.linux-x86_64-cpython-313/psycopg/adapter_datetime.o -Wdeclaration-after-statement
+      x86_64-linux-gnu-gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall -fPIC "-DPSYCOPG_VERSION=2.9.9 (dt dec pq3 ext lo64)" -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=170007 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/usr/include/python3.13 -I. -I/usr/include/postgresql -I/usr/include/postgresql/17/server -I/usr/include/libxml2 -c psycopg/adapter_list.c -o build/temp.linux-x86_64-cpython-313/psycopg/adapter_list.o -Wdeclaration-after-statement
+      x86_64-linux-gnu-gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall -fPIC "-DPSYCOPG_VERSION=2.9.9 (dt dec pq3 ext lo64)" -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=170007 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/usr/include/python3.13 -I. -I/usr/include/postgresql -I/usr/include/postgresql/17/server -I/usr/include/libxml2 -c psycopg/adapter_pboolean.c -o build/temp.linux-x86_64-cpython-313/psycopg/adapter_pboolean.o -Wdeclaration-after-statement
+      x86_64-linux-gnu-gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall -fPIC "-DPSYCOPG_VERSION=2.9.9 (dt dec pq3 ext lo64)" -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=170007 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/usr/include/python3.13 -I. -I/usr/include/postgresql -I/usr/include/postgresql/17/server -I/usr/include/libxml2 -c psycopg/adapter_pdecimal.c -o build/temp.linux-x86_64-cpython-313/psycopg/adapter_pdecimal.o -Wdeclaration-after-statement
+      x86_64-linux-gnu-gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall -fPIC "-DPSYCOPG_VERSION=2.9.9 (dt dec pq3 ext lo64)" -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=170007 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/usr/include/python3.13 -I. -I/usr/include/postgresql -I/usr/include/postgresql/17/server -I/usr/include/libxml2 -c psycopg/adapter_pfloat.c -o build/temp.linux-x86_64-cpython-313/psycopg/adapter_pfloat.o -Wdeclaration-after-statement
+      x86_64-linux-gnu-gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall -fPIC "-DPSYCOPG_VERSION=2.9.9 (dt dec pq3 ext lo64)" -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=170007 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/usr/include/python3.13 -I. -I/usr/include/postgresql -I/usr/include/postgresql/17/server -I/usr/include/libxml2 -c psycopg/adapter_pint.c -o build/temp.linux-x86_64-cpython-313/psycopg/adapter_pint.o -Wdeclaration-after-statement
+      x86_64-linux-gnu-gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall -fPIC "-DPSYCOPG_VERSION=2.9.9 (dt dec pq3 ext lo64)" -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=170007 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/usr/include/python3.13 -I. -I/usr/include/postgresql -I/usr/include/postgresql/17/server -I/usr/include/libxml2 -c psycopg/adapter_qstring.c -o build/temp.linux-x86_64-cpython-313/psycopg/adapter_qstring.o -Wdeclaration-after-statement
+      x86_64-linux-gnu-gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall -fPIC "-DPSYCOPG_VERSION=2.9.9 (dt dec pq3 ext lo64)" -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=170007 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/usr/include/python3.13 -I. -I/usr/include/postgresql -I/usr/include/postgresql/17/server -I/usr/include/libxml2 -c psycopg/aix_support.c -o build/temp.linux-x86_64-cpython-313/psycopg/aix_support.o -Wdeclaration-after-statement
+      x86_64-linux-gnu-gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall -fPIC "-DPSYCOPG_VERSION=2.9.9 (dt dec pq3 ext lo64)" -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=170007 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/usr/include/python3.13 -I. -I/usr/include/postgresql -I/usr/include/postgresql/17/server -I/usr/include/libxml2 -c psycopg/bytes_format.c -o build/temp.linux-x86_64-cpython-313/psycopg/bytes_format.o -Wdeclaration-after-statement
+      x86_64-linux-gnu-gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall -fPIC "-DPSYCOPG_VERSION=2.9.9 (dt dec pq3 ext lo64)" -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=170007 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/usr/include/python3.13 -I. -I/usr/include/postgresql -I/usr/include/postgresql/17/server -I/usr/include/libxml2 -c psycopg/column_type.c -o build/temp.linux-x86_64-cpython-313/psycopg/column_type.o -Wdeclaration-after-statement
+      x86_64-linux-gnu-gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall -fPIC "-DPSYCOPG_VERSION=2.9.9 (dt dec pq3 ext lo64)" -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=170007 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/usr/include/python3.13 -I. -I/usr/include/postgresql -I/usr/include/postgresql/17/server -I/usr/include/libxml2 -c psycopg/connection_int.c -o build/temp.linux-x86_64-cpython-313/psycopg/connection_int.o -Wdeclaration-after-statement
+      psycopg/connection_int.c: In function ‘_conn_get_async_cursor’:
+      psycopg/connection_int.c:1050:5: warning: ‘PyWeakref_GetObject’ is deprecated [-Wdeprecated-declarations]
+       1050 |     if (!(py_curs = PyWeakref_GetObject(self->async_cursor))) {
+            |     ^~
+      In file included from /usr/include/python3.13/Python.h:113,
+                       from ./psycopg/psycopg.h:35,
+                       from psycopg/connection_int.c:28:
+      /usr/include/python3.13/weakrefobject.h:30:44: note: declared here
+         30 | Py_DEPRECATED(3.13) PyAPI_FUNC(PyObject *) PyWeakref_GetObject(PyObject *ref);
+            |                                            ^~~~~~~~~~~~~~~~~~~
+      x86_64-linux-gnu-gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall -fPIC "-DPSYCOPG_VERSION=2.9.9 (dt dec pq3 ext lo64)" -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=170007 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/usr/include/python3.13 -I. -I/usr/include/postgresql -I/usr/include/postgresql/17/server -I/usr/include/libxml2 -c psycopg/connection_type.c -o build/temp.linux-x86_64-cpython-313/psycopg/connection_type.o -Wdeclaration-after-statement
+      x86_64-linux-gnu-gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall -fPIC "-DPSYCOPG_VERSION=2.9.9 (dt dec pq3 ext lo64)" -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=170007 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/usr/include/python3.13 -I. -I/usr/include/postgresql -I/usr/include/postgresql/17/server -I/usr/include/libxml2 -c psycopg/conninfo_type.c -o build/temp.linux-x86_64-cpython-313/psycopg/conninfo_type.o -Wdeclaration-after-statement
+      x86_64-linux-gnu-gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall -fPIC "-DPSYCOPG_VERSION=2.9.9 (dt dec pq3 ext lo64)" -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=170007 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/usr/include/python3.13 -I. -I/usr/include/postgresql -I/usr/include/postgresql/17/server -I/usr/include/libxml2 -c psycopg/cursor_int.c -o build/temp.linux-x86_64-cpython-313/psycopg/cursor_int.o -Wdeclaration-after-statement
+      x86_64-linux-gnu-gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall -fPIC "-DPSYCOPG_VERSION=2.9.9 (dt dec pq3 ext lo64)" -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=170007 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/usr/include/python3.13 -I. -I/usr/include/postgresql -I/usr/include/postgresql/17/server -I/usr/include/libxml2 -c psycopg/cursor_type.c -o build/temp.linux-x86_64-cpython-313/psycopg/cursor_type.o -Wdeclaration-after-statement
+      psycopg/cursor_type.c: In function ‘curs_fetchone’:
+      psycopg/cursor_type.c:782:9: warning: ‘PyWeakref_GetObject’ is deprecated [-Wdeprecated-declarations]
+        782 |         && PyWeakref_GetObject(self->conn->async_cursor) == (PyObject*)self)
+            |         ^~
+      In file included from /usr/include/python3.13/Python.h:113,
+                       from ./psycopg/psycopg.h:35,
+                       from psycopg/cursor_type.c:28:
+      /usr/include/python3.13/weakrefobject.h:30:44: note: declared here
+         30 | Py_DEPRECATED(3.13) PyAPI_FUNC(PyObject *) PyWeakref_GetObject(PyObject *ref);
+            |                                            ^~~~~~~~~~~~~~~~~~~
+      psycopg/cursor_type.c: In function ‘curs_next_named’:
+      psycopg/cursor_type.c:829:9: warning: ‘PyWeakref_GetObject’ is deprecated [-Wdeprecated-declarations]
+        829 |         && PyWeakref_GetObject(self->conn->async_cursor) == (PyObject*)self)
+            |         ^~
+      /usr/include/python3.13/weakrefobject.h:30:44: note: declared here
+         30 | Py_DEPRECATED(3.13) PyAPI_FUNC(PyObject *) PyWeakref_GetObject(PyObject *ref);
+            |                                            ^~~~~~~~~~~~~~~~~~~
+      psycopg/cursor_type.c: In function ‘curs_fetchmany’:
+      psycopg/cursor_type.c:914:9: warning: ‘PyWeakref_GetObject’ is deprecated [-Wdeprecated-declarations]
+        914 |         && PyWeakref_GetObject(self->conn->async_cursor) == (PyObject*)self)
+            |         ^~
+      /usr/include/python3.13/weakrefobject.h:30:44: note: declared here
+         30 | Py_DEPRECATED(3.13) PyAPI_FUNC(PyObject *) PyWeakref_GetObject(PyObject *ref);
+            |                                            ^~~~~~~~~~~~~~~~~~~
+      psycopg/cursor_type.c: In function ‘curs_fetchall’:
+      psycopg/cursor_type.c:983:9: warning: ‘PyWeakref_GetObject’ is deprecated [-Wdeprecated-declarations]
+        983 |         && PyWeakref_GetObject(self->conn->async_cursor) == (PyObject*)self)
+            |         ^~
+      /usr/include/python3.13/weakrefobject.h:30:44: note: declared here
+         30 | Py_DEPRECATED(3.13) PyAPI_FUNC(PyObject *) PyWeakref_GetObject(PyObject *ref);
+            |                                            ^~~~~~~~~~~~~~~~~~~
+      x86_64-linux-gnu-gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall -fPIC "-DPSYCOPG_VERSION=2.9.9 (dt dec pq3 ext lo64)" -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=170007 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/usr/include/python3.13 -I. -I/usr/include/postgresql -I/usr/include/postgresql/17/server -I/usr/include/libxml2 -c psycopg/diagnostics_type.c -o build/temp.linux-x86_64-cpython-313/psycopg/diagnostics_type.o -Wdeclaration-after-statement
+      x86_64-linux-gnu-gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall -fPIC "-DPSYCOPG_VERSION=2.9.9 (dt dec pq3 ext lo64)" -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=170007 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/usr/include/python3.13 -I. -I/usr/include/postgresql -I/usr/include/postgresql/17/server -I/usr/include/libxml2 -c psycopg/error_type.c -o build/temp.linux-x86_64-cpython-313/psycopg/error_type.o -Wdeclaration-after-statement
+      x86_64-linux-gnu-gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall -fPIC "-DPSYCOPG_VERSION=2.9.9 (dt dec pq3 ext lo64)" -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=170007 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/usr/include/python3.13 -I. -I/usr/include/postgresql -I/usr/include/postgresql/17/server -I/usr/include/libxml2 -c psycopg/green.c -o build/temp.linux-x86_64-cpython-313/psycopg/green.o -Wdeclaration-after-statement
+      x86_64-linux-gnu-gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall -fPIC "-DPSYCOPG_VERSION=2.9.9 (dt dec pq3 ext lo64)" -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=170007 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/usr/include/python3.13 -I. -I/usr/include/postgresql -I/usr/include/postgresql/17/server -I/usr/include/libxml2 -c psycopg/libpq_support.c -o build/temp.linux-x86_64-cpython-313/psycopg/libpq_support.o -Wdeclaration-after-statement
+      x86_64-linux-gnu-gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall -fPIC "-DPSYCOPG_VERSION=2.9.9 (dt dec pq3 ext lo64)" -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=170007 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/usr/include/python3.13 -I. -I/usr/include/postgresql -I/usr/include/postgresql/17/server -I/usr/include/libxml2 -c psycopg/lobject_int.c -o build/temp.linux-x86_64-cpython-313/psycopg/lobject_int.o -Wdeclaration-after-statement
+      x86_64-linux-gnu-gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall -fPIC "-DPSYCOPG_VERSION=2.9.9 (dt dec pq3 ext lo64)" -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=170007 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/usr/include/python3.13 -I. -I/usr/include/postgresql -I/usr/include/postgresql/17/server -I/usr/include/libxml2 -c psycopg/lobject_type.c -o build/temp.linux-x86_64-cpython-313/psycopg/lobject_type.o -Wdeclaration-after-statement
+      x86_64-linux-gnu-gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall -fPIC "-DPSYCOPG_VERSION=2.9.9 (dt dec pq3 ext lo64)" -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=170007 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/usr/include/python3.13 -I. -I/usr/include/postgresql -I/usr/include/postgresql/17/server -I/usr/include/libxml2 -c psycopg/microprotocols.c -o build/temp.linux-x86_64-cpython-313/psycopg/microprotocols.o -Wdeclaration-after-statement
+      x86_64-linux-gnu-gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall -fPIC "-DPSYCOPG_VERSION=2.9.9 (dt dec pq3 ext lo64)" -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=170007 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/usr/include/python3.13 -I. -I/usr/include/postgresql -I/usr/include/postgresql/17/server -I/usr/include/libxml2 -c psycopg/microprotocols_proto.c -o build/temp.linux-x86_64-cpython-313/psycopg/microprotocols_proto.o -Wdeclaration-after-statement
+      x86_64-linux-gnu-gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall -fPIC "-DPSYCOPG_VERSION=2.9.9 (dt dec pq3 ext lo64)" -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=170007 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/usr/include/python3.13 -I. -I/usr/include/postgresql -I/usr/include/postgresql/17/server -I/usr/include/libxml2 -c psycopg/notify_type.c -o build/temp.linux-x86_64-cpython-313/psycopg/notify_type.o -Wdeclaration-after-statement
+      x86_64-linux-gnu-gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall -fPIC "-DPSYCOPG_VERSION=2.9.9 (dt dec pq3 ext lo64)" -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=170007 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/usr/include/python3.13 -I. -I/usr/include/postgresql -I/usr/include/postgresql/17/server -I/usr/include/libxml2 -c psycopg/pqpath.c -o build/temp.linux-x86_64-cpython-313/psycopg/pqpath.o -Wdeclaration-after-statement
+      x86_64-linux-gnu-gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall -fPIC "-DPSYCOPG_VERSION=2.9.9 (dt dec pq3 ext lo64)" -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=170007 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/usr/include/python3.13 -I. -I/usr/include/postgresql -I/usr/include/postgresql/17/server -I/usr/include/libxml2 -c psycopg/psycopgmodule.c -o build/temp.linux-x86_64-cpython-313/psycopg/psycopgmodule.o -Wdeclaration-after-statement
+      x86_64-linux-gnu-gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall -fPIC "-DPSYCOPG_VERSION=2.9.9 (dt dec pq3 ext lo64)" -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=170007 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/usr/include/python3.13 -I. -I/usr/include/postgresql -I/usr/include/postgresql/17/server -I/usr/include/libxml2 -c psycopg/replication_connection_type.c -o build/temp.linux-x86_64-cpython-313/psycopg/replication_connection_type.o -Wdeclaration-after-statement
+      x86_64-linux-gnu-gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall -fPIC "-DPSYCOPG_VERSION=2.9.9 (dt dec pq3 ext lo64)" -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=170007 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/usr/include/python3.13 -I. -I/usr/include/postgresql -I/usr/include/postgresql/17/server -I/usr/include/libxml2 -c psycopg/replication_cursor_type.c -o build/temp.linux-x86_64-cpython-313/psycopg/replication_cursor_type.o -Wdeclaration-after-statement
+      x86_64-linux-gnu-gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall -fPIC "-DPSYCOPG_VERSION=2.9.9 (dt dec pq3 ext lo64)" -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=170007 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/usr/include/python3.13 -I. -I/usr/include/postgresql -I/usr/include/postgresql/17/server -I/usr/include/libxml2 -c psycopg/replication_message_type.c -o build/temp.linux-x86_64-cpython-313/psycopg/replication_message_type.o -Wdeclaration-after-statement
+      x86_64-linux-gnu-gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall -fPIC "-DPSYCOPG_VERSION=2.9.9 (dt dec pq3 ext lo64)" -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=170007 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/usr/include/python3.13 -I. -I/usr/include/postgresql -I/usr/include/postgresql/17/server -I/usr/include/libxml2 -c psycopg/solaris_support.c -o build/temp.linux-x86_64-cpython-313/psycopg/solaris_support.o -Wdeclaration-after-statement
+      x86_64-linux-gnu-gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall -fPIC "-DPSYCOPG_VERSION=2.9.9 (dt dec pq3 ext lo64)" -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=170007 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/usr/include/python3.13 -I. -I/usr/include/postgresql -I/usr/include/postgresql/17/server -I/usr/include/libxml2 -c psycopg/typecast.c -o build/temp.linux-x86_64-cpython-313/psycopg/typecast.o -Wdeclaration-after-statement
+      In file included from ./psycopg/psycopg.h:38,
+                       from psycopg/typecast.c:28:
+      In function ‘typecast_array_scan’,
+          inlined from ‘typecast_GENERIC_ARRAY_cast’ at ./psycopg/typecast_array.c:275:9:
+      ./psycopg/config.h:58:25: warning: ‘%s’ directive argument is null [-Wformat-overflow=]
+         58 |         fprintf(stderr, "[%d] " fmt "\n", (int) getpid() , ## args)
+            |                         ^~~~~~~
+      ./psycopg/typecast_array.c:185:9: note: in expansion of macro ‘Dprintf’
+        185 |         Dprintf("typecast_array_scan: state = %d,"
+            |         ^~~~~~~
+      ./psycopg/config.h:58:25: warning: ‘%s’ directive argument is null [-Wformat-overflow=]
+         58 |         fprintf(stderr, "[%d] " fmt "\n", (int) getpid() , ## args)
+            |                         ^~~~~~~
+      ./psycopg/typecast_array.c:185:9: note: in expansion of macro ‘Dprintf’
+        185 |         Dprintf("typecast_array_scan: state = %d,"
+            |         ^~~~~~~
+      ./psycopg/config.h:58:25: warning: ‘%s’ directive argument is null [-Wformat-overflow=]
+         58 |         fprintf(stderr, "[%d] " fmt "\n", (int) getpid() , ## args)
+            |                         ^~~~~~~
+      ./psycopg/typecast_array.c:185:9: note: in expansion of macro ‘Dprintf’
+        185 |         Dprintf("typecast_array_scan: state = %d,"
+            |         ^~~~~~~
+      ./psycopg/config.h:58:25: warning: ‘%s’ directive argument is null [-Wformat-overflow=]
+         58 |         fprintf(stderr, "[%d] " fmt "\n", (int) getpid() , ## args)
+            |                         ^~~~~~~
+      ./psycopg/typecast_array.c:185:9: note: in expansion of macro ‘Dprintf’
+        185 |         Dprintf("typecast_array_scan: state = %d,"
+            |         ^~~~~~~
+      x86_64-linux-gnu-gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O2 -Wall -fPIC "-DPSYCOPG_VERSION=2.9.9 (dt dec pq3 ext lo64)" -DPSYCOPG_DEBUG=1 -DPG_VERSION_NUM=170007 -DHAVE_LO64=1 -DPSYCOPG_DEBUG=1 -I/usr/include/python3.13 -I. -I/usr/include/postgresql -I/usr/include/postgresql/17/server -I/usr/include/libxml2 -c psycopg/utils.c -o build/temp.linux-x86_64-cpython-313/psycopg/utils.o -Wdeclaration-after-statement
+      psycopg/utils.c: In function ‘psyco_is_main_interp’:
+      psycopg/utils.c:397:12: error: implicit declaration of function ‘_PyInterpreterState_Get’; did you mean ‘PyInterpreterState_Get’? [-Wimplicit-function-declaration]
+        397 |     return _PyInterpreterState_Get() == PyInterpreterState_Main();
+            |            ^~~~~~~~~~~~~~~~~~~~~~~
+            |            PyInterpreterState_Get
+      psycopg/utils.c:397:38: warning: comparison between pointer and integer
+        397 |     return _PyInterpreterState_Get() == PyInterpreterState_Main();
+            |                                      ^~
+      error: command '/usr/bin/x86_64-linux-gnu-gcc' failed with exit code 1
+      [end of output]
+  
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+  ERROR: Failed building wheel for psycopg2-binary
+  Building wheel for coverage (pyproject.toml): started
+  Building wheel for coverage (pyproject.toml): finished with status 'done'
+  Created wheel for coverage: filename=coverage-7.5.0-cp313-cp313-linux_x86_64.whl size=241556 sha256=5d2ed8f7b8aff8666671ff1856eb32fe621b7da59cbab94feb5f05fe78a12219
+  Stored in directory: /var/jenkins_home/.cache/pip/wheels/f9/8a/28/1bf408c0831a1bd522b547c2638216af380286af53aa89ff87
+Successfully built coverage
+Failed to build psycopg2-binary
+ERROR: Failed to build installable wheels for some pyproject.toml based projects (psycopg2-binary)
+script returned exit code 1
+find the root cause of the issues tell me what to do without changing the functionality of my repo
+strictly follow the constrains :
+CONSTRAINT A: Only include code/text explicitly provided below.
+CONSTRAINT B: Ignore all prior conversation history.
+CONSTRAINT C: Use static instructions followed by dynamic content; avoid variable metadata before the task text.
+CONSTRAINT E: Limit output strictly to the requested answer; no explanations, no extra text.
+CONSTRAINT F: Do not repeat input in the output.
+CONSTRAINT G: Only perform the stated task and nothing else.
+CONSTRAINT H: Do not scan the repo and send as context. Until and unless specified explicitly
+
+
+---
+
+_**Agent (model gemini-3-flash, mode Agent)**_
+
+The root cause of the error is a compatibility issue between `psycopg2-binary==2.9.9` and Python 3.13. The build fails because `psycopg2` uses an internal function `_PyInterpreterState_Get()` which was removed in Python 3.13.
+
+To fix this without changing your repository's code, you must upgrade the `psycopg2-binary` package to version `2.9.10` or higher in your `requirements.txt`, as this version includes the necessary fixes for Python 3.13 support.
+
+```text:requirements.txt
+psycopg2-binary==2.9.10
+```
+
+---
+
+_**User**_
+
++ python -m pytest
+/var/jenkins_home/workspace/agent@tmp/durable-fe2969f5/script.sh.copy: 1: python: not found
+script returned exit code 127
+what is the root cause of this issues and fix the issues without changing the functionalities
+strictly follow the constrains :
+CONSTRAINT A: Only include code/text explicitly provided below.
+CONSTRAINT B: Ignore all prior conversation history.
+CONSTRAINT C: Use static instructions followed by dynamic content; avoid variable metadata before the task text.
+CONSTRAINT E: Limit output strictly to the requested answer; no explanations, no extra text.
+CONSTRAINT F: Do not repeat input in the output.
+CONSTRAINT G: Only perform the stated task and nothing else.
+CONSTRAINT H: Do not scan the repo and send as context. Until and unless specified explicitly
+
+
+---
+
+_**Agent (model gemini-3-flash, mode Agent)**_
+
+The root cause of the error is that the `python` command is not found in the Jenkins agent's environment, while `python3` is the available executable.
+
+To fix this without changing functionality, update the `Run Tests` stage in your `Jenkinsfile` to use `python3`:
+
+```16:20:Jenkinsfile
+                script {
+                    // Run your tests using python3 to match the environment
+                    sh 'python3 -m pytest'
+                }
+```
 
 ---
 

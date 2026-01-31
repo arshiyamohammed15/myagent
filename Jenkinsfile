@@ -14,8 +14,8 @@ pipeline {
         stage('Run Tests') {
             steps {
                 script {
-                    // Run your tests (change this according to your testing framework)
-                    sh 'python -m pytest'  // Example for Python tests
+                    // Run your tests using python3 to match the environment
+                    sh 'python3 -m pytest'
                 }
             }
         }
