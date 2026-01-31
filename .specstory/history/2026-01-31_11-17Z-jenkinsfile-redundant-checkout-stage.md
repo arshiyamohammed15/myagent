@@ -768,3 +768,74 @@ To solve the `pip: not found` error, you must ensure Python and pip are availabl
 
 ---
 
+_**User**_
+
++ pip install -r requirements.txt
+/var/jenkins_home/workspace/agent@tmp/durable-510d7342/script.sh.copy: 1: pip: not found
+find the root cause of the issue 
+strictly follow the constrains :
+CONSTRAINT A: Only include code/text explicitly provided below.
+CONSTRAINT B: Ignore all prior conversation history.
+CONSTRAINT C: Use static instructions followed by dynamic content; avoid variable metadata before the task text.
+CONSTRAINT E: Limit output strictly to the requested answer; no explanations, no extra text.
+CONSTRAINT F: Do not repeat input in the output.
+CONSTRAINT G: Only perform the stated task and nothing else.
+CONSTRAINT H: Do not scan the repo and send as context. Until and unless specified explicitly
+
+
+---
+
+_**Agent (model gemini-3-flash, mode Agent)**_
+
+The root cause is that the `pip` executable is not installed or not available in the system's `PATH` on the Jenkins agent where the script is executing.
+
+---
+
+_**User**_
+
+what should i do solve this issues
+strictly follow the constrains :
+CONSTRAINT A: Only include code/text explicitly provided below.
+CONSTRAINT B: Ignore all prior conversation history.
+CONSTRAINT C: Use static instructions followed by dynamic content; avoid variable metadata before the task text.
+CONSTRAINT E: Limit output strictly to the requested answer; no explanations, no extra text.
+CONSTRAINT F: Do not repeat input in the output.
+CONSTRAINT G: Only perform the stated task and nothing else.
+CONSTRAINT H: Do not scan the repo and send as context. Until and unless specified explicitly
+
+
+---
+
+_**Agent (model gemini-3-flash, mode Agent)**_
+
+To solve the `pip: not found` error, you must ensure Python and pip are available in the Jenkins environment. Update the `agent` section to use a Docker container with Python installed:
+
+```6:10:Jenkinsfile
+    agent {
+        docker {
+            image 'python:3.9'
+        }
+    }
+```
+
+---
+
+_**User**_
+
+To solve the pip: not found error, you must ensure Python and pip are available in the Jenkins environment. Update the agent section to use a Docker container with Python installed:
+Jenkinsfile
+Lines 6-10
+    agent {        docker {            image 'python:3.9'        }             }
+do that
+strictly follow the constrains :
+CONSTRAINT A: Only include code/text explicitly provided below.
+CONSTRAINT B: Ignore all prior conversation history.
+CONSTRAINT C: Use static instructions followed by dynamic content; avoid variable metadata before the task text.
+CONSTRAINT E: Limit output strictly to the requested answer; no explanations, no extra text.
+CONSTRAINT F: Do not repeat input in the output.
+CONSTRAINT G: Only perform the stated task and nothing else.
+CONSTRAINT H: Do not scan the repo and send as context. Until and unless specified explicitly
+
+
+---
+
