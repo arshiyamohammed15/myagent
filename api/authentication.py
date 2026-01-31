@@ -68,7 +68,10 @@ def register_auth_middleware(
 ) -> None:
     """
     Register middleware that enforces JWT auth on all routes except allowed paths.
+    Supports wildcard patterns (e.g., "/tasks/*" matches "/tasks/123")
     """
+    import fnmatch
+
     allowed: Set[str] = set(allow_paths or [])
 
     @app.middleware("http")
@@ -77,7 +80,15 @@ def register_auth_middleware(
         if request.method == "OPTIONS":
             return await call_next(request)
 
-        if request.url.path in allowed:
+        # Check if path matches any allowed pattern
+        path_allowed = False
+        for allowed_path in allowed:
+            if fnmatch.fnmatch(request.url.path, allowed_path):
+                path_allowed = True
+                break
+
+        # Debug logging
+        if path_allowed:
             return await call_next(request)
 
         authorization: str | None = request.headers.get("Authorization")

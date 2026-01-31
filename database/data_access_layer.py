@@ -48,8 +48,35 @@ class TestTaskDAL:
         return self.session.scalars(stmt).first()
 
     def list_tasks(self) -> List[TestTaskModel]:
-        stmt = select(TestTaskModel)
-        return list(self.session.scalars(stmt).all())
+        # #region agent log
+        import json
+        try:
+            with open(r'c:\Users\ASUS\Desktop\agents\Planner_1\.cursor\debug.log', 'a', encoding='utf-8') as f:
+                f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"G","location":"data_access_layer.py:list_tasks","message":"About to execute list_tasks query","data":{"session_type":type(self.session).__name__},"timestamp":int(__import__('time').time() * 1000)}) + '\n')
+        except: pass
+        # #endregion
+        
+        try:
+            stmt = select(TestTaskModel)
+            result = list(self.session.scalars(stmt).all())
+            
+            # #region agent log
+            try:
+                with open(r'c:\Users\ASUS\Desktop\agents\Planner_1\.cursor\debug.log', 'a', encoding='utf-8') as f:
+                    f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"G","location":"data_access_layer.py:list_tasks","message":"list_tasks query successful","data":{"task_count":len(result)},"timestamp":int(__import__('time').time() * 1000)}) + '\n')
+            except: pass
+            # #endregion
+            
+            return result
+        except Exception as e:
+            # #region agent log
+            try:
+                with open(r'c:\Users\ASUS\Desktop\agents\Planner_1\.cursor\debug.log', 'a', encoding='utf-8') as f:
+                    error_str = str(e)
+                    f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"G","location":"data_access_layer.py:list_tasks","message":"list_tasks query failed","data":{"error_type":type(e).__name__,"error":error_str[:500],"has_password_auth":'password authentication' in error_str.lower(),"has_psycopg2":'psycopg2' in error_str,"has_operational":'OperationalError' in error_str},"timestamp":int(__import__('time').time() * 1000)}) + '\n')
+            except: pass
+            # #endregion
+            raise
 
     def plan_tasks(self) -> List[TestTaskModel]:
         """

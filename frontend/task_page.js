@@ -5,32 +5,45 @@
  * Highlights @mentions within comments for better visibility.
  */
 
-// Configuration
-const API_BASE_URL = window.API_BASE_URL || 'http://localhost:8000';
-const CURRENT_USER = window.CURRENT_USER || null; // Set this from your auth system
-const API_TOKEN = window.API_TOKEN || 'test-secret-key'; // API authentication token
+// Configuration - explicitly access window variables
+const API_BASE_URL = window.API_BASE_URL || '';
+const CURRENT_USER = window.CURRENT_USER || 'mk'; // Set this from your auth system
+const JWT_TOKEN = window.JWT_TOKEN || null; // Don't use fallback token
 
-/**
- * Get common headers for API requests
- */
-function getApiHeaders() {
-    return {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${API_TOKEN}`,
-    };
-}
+console.log('Frontend configuration loaded:');
+console.log('- API_BASE_URL:', API_BASE_URL);
+console.log('- CURRENT_USER:', CURRENT_USER);
+console.log('- JWT_TOKEN exists:', !!window.JWT_TOKEN);
+console.log('- JWT_TOKEN length:', window.JWT_TOKEN ? window.JWT_TOKEN.length : 0);
 
 /**
  * Fetch task details including comments from the API
  */
 async function fetchTaskDetails(taskId) {
     try {
+        // Debug: Check if token is available
+        console.log('API_BASE_URL:', API_BASE_URL);
+        console.log('JWT_TOKEN available:', !!JWT_TOKEN);
+        console.log('JWT_TOKEN length:', JWT_TOKEN ? JWT_TOKEN.length : 0);
+
+        const headers = {
+            'Content-Type': 'application/json',
+        };
+
+        // Only add Authorization header if token exists
+        if (JWT_TOKEN) {
+            headers['Authorization'] = `Bearer ${JWT_TOKEN}`;
+        }
+
         const response = await fetch(`${API_BASE_URL}/tasks/${taskId}`, {
             method: 'GET',
-            headers: getApiHeaders(),
+            headers: headers,
         });
 
         if (!response.ok) {
+            if (response.status === 401) {
+                throw new Error(`Failed to fetch task: Unauthorized`);
+            }
             if (response.status === 404) {
                 throw new Error(`Task ${taskId} not found`);
             }
@@ -51,10 +64,16 @@ async function fetchTaskComments(taskId) {
     try {
         const response = await fetch(`${API_BASE_URL}/tasks/${taskId}/comments`, {
             method: 'GET',
-            headers: getApiHeaders(),
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${JWT_TOKEN}`,
+            },
         });
 
         if (!response.ok) {
+            if (response.status === 401) {
+                throw new Error(`Failed to fetch comments: Unauthorized`);
+            }
             throw new Error(`Failed to fetch comments: ${response.statusText}`);
         }
 

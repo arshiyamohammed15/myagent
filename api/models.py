@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 from pydantic import BaseModel, Field, ValidationInfo, field_validator
 
@@ -167,3 +167,39 @@ class TaskDetailResponse(BaseModel):
     coverage_status: str
     dependencies: List[str] = Field(default_factory=list)
     comments: List[CommentResponse] = Field(default_factory=list)
+
+
+class CoverageGapItem(BaseModel):
+    """Represents a single missing test scenario."""
+
+    task_id: str
+    description: str
+    test_type: str
+    priority: int = Field(..., description="Priority value (higher = more important)")
+    coverage_status: str
+
+
+class CoverageGapResponse(BaseModel):
+    """Response for coverage gap analysis endpoint."""
+
+    plan_id: str
+    total_tasks: int
+    missing_count: int
+    gaps: List[CoverageGapItem]
+    summary: str
+
+
+class CoverageAnalysisResponse(BaseModel):
+    """Comprehensive coverage analysis response."""
+
+    plan_id: str
+    coverage_by_type: Dict[str, Dict] = Field(
+        ..., description="Coverage breakdown by test type"
+    )
+    missing_test_types: List[str] = Field(
+        default_factory=list, description="Test types not covered"
+    )
+    prioritized_gaps: List[CoverageGapItem]
+    coverage_percentage: float = Field(
+        ..., description="Overall coverage percentage (0-100)"
+    )
